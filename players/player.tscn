@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://chj0qb2p0dx66"]
+
+[ext_resource type="Script" uid="uid://c7h4c4iwdndb6" path="res://players/scripts/player.gd" id="1_60y4r"]
+[ext_resource type="Script" uid="uid://1en0h6htu7ar" path="res://players/scripts/player_movement.gd" id="2_g8xtg"]
+[ext_resource type="Script" uid="uid://dmic00c2itf3r" path="res://players/scripts/player_interaction.gd" id="3_k00sm"]
+[ext_resource type="Script" uid="uid://cgq6x66vkhm2y" path="res://players/scripts/player_animation.gd" id="4_l1fvc"]
+
+[sub_resource type="CapsuleShape3D" id="Capsule"]
+radius = 0.22
+height = 0.8
+
+[sub_resource type="CapsuleMesh" id="BodyMesh"]
+radius = 0.22
+height = 0.8
+
+[sub_resource type="BoxMesh" id="ForwardMesh"]
+size = Vector3(0.12, 0.12, 0.3)
+
+[sub_resource type="BoxShape3D" id="InteractionShape"]
+size = Vector3(1, 0.8, 1.2)
+
+[node name="Player" type="CharacterBody3D" unique_id=684414594]
+collision_layer = 2
+collision_mask = 7
+axis_lock_linear_y = true
+motion_mode = 1
+platform_floor_layers = 0
+script = ExtResource("1_60y4r")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1243513578]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("Capsule")
+
+[node name="Visual" type="Node3D" parent="." unique_id=1870613866]
+
+[node name="BodyMesh" type="MeshInstance3D" parent="Visual" unique_id=269504700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("BodyMesh")
+
+[node name="ForwardMarker" type="MeshInstance3D" parent="Visual" unique_id=1849212751]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.3)
+mesh = SubResource("ForwardMesh")
+
+[node name="OneHandAnchor" type="Node3D" parent="." unique_id=1743086293]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.6, -0.45)
+
+[node name="TwoHandAnchor" type="Node3D" parent="." unique_id=1753284048]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, -0.5)
+
+[node name="InteractionArea" type="Area3D" parent="." unique_id=204176261]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.85)
+collision_layer = 0
+collision_mask = 5
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea" unique_id=663715561]
+shape = SubResource("InteractionShape")
+
+[node name="Movement" type="Node" parent="." unique_id=1441724289]
+unique_name_in_owner = true
+script = ExtResource("2_g8xtg")
+
+[node name="Interaction" type="Node" parent="." unique_id=1281452781]
+unique_name_in_owner = true
+script = ExtResource("3_k00sm")
+
+[node name="Animation" type="Node" parent="." unique_id=1699544241]
+unique_name_in_owner = true
+script = ExtResource("4_l1fvc")

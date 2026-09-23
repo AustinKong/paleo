@@ -1,3 +1,140 @@
-[gd_scene format=3 uid="uid://blvdor3nomc5d"]
+[gd_scene load_steps=11 format=3 uid="uid://blvdor3nomc5d"]
 
-[node name="Main" type="Node3D" unique_id=584103423]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1"]
+[ext_resource type="Script" path="res://players/player_manager.gd" id="2"]
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.065, 0.085, 0.11, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.8, 0.87, 1, 1)
+ambient_light_energy = 0.65
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="GroundMaterial"]
+albedo_color = Color(0.15, 0.23, 0.25, 1)
+roughness = 1.0
+
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+material = SubResource("GroundMaterial")
+size = Vector2(12, 12)
+
+[sub_resource type="StandardMaterial3D" id="WallMaterial"]
+albedo_color = Color(0.4, 0.48, 0.52, 1)
+
+[sub_resource type="BoxMesh" id="WallMesh"]
+material = SubResource("WallMaterial")
+size = Vector3(12.4, 1, 0.4)
+
+[sub_resource type="BoxShape3D" id="WallShape"]
+size = Vector3(12.4, 1, 0.4)
+
+[sub_resource type="BoxMesh" id="ObstacleMesh"]
+material = SubResource("WallMaterial")
+size = Vector3(2, 1, 1)
+
+[sub_resource type="BoxShape3D" id="ObstacleShape"]
+size = Vector3(2, 1, 1)
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(0, 12, 9)
+rotation = Vector3(-0.927295, 0, 0)
+projection = 1
+size = 17.0
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-55, -25, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("GroundMesh")
+
+[node name="Walls" type="Node3D" parent="."]
+
+[node name="North" type="StaticBody3D" parent="Walls"]
+position = Vector3(0, 0.5, -6)
+rotation_degrees = Vector3(0, 0, 0)
+collision_layer = 1
+collision_mask = 2
+
+[node name="Mesh" type="MeshInstance3D" parent="Walls/North"]
+mesh = SubResource("WallMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/North"]
+shape = SubResource("WallShape")
+
+[node name="South" type="StaticBody3D" parent="Walls"]
+position = Vector3(0, 0.5, 6)
+rotation_degrees = Vector3(0, 0, 0)
+collision_layer = 1
+collision_mask = 2
+
+[node name="Mesh" type="MeshInstance3D" parent="Walls/South"]
+mesh = SubResource("WallMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/South"]
+shape = SubResource("WallShape")
+
+[node name="West" type="StaticBody3D" parent="Walls"]
+position = Vector3(-6, 0.5, 0)
+rotation_degrees = Vector3(0, 90, 0)
+collision_layer = 1
+collision_mask = 2
+
+[node name="Mesh" type="MeshInstance3D" parent="Walls/West"]
+mesh = SubResource("WallMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/West"]
+shape = SubResource("WallShape")
+
+[node name="East" type="StaticBody3D" parent="Walls"]
+position = Vector3(6, 0.5, 0)
+rotation_degrees = Vector3(0, 90, 0)
+collision_layer = 1
+collision_mask = 2
+
+[node name="Mesh" type="MeshInstance3D" parent="Walls/East"]
+mesh = SubResource("WallMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/East"]
+shape = SubResource("WallShape")
+
+[node name="Obstacle" type="StaticBody3D" parent="."]
+position = Vector3(0, 0.5, -1)
+collision_layer = 1
+collision_mask = 2
+
+[node name="Mesh" type="MeshInstance3D" parent="Obstacle"]
+mesh = SubResource("ObstacleMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle"]
+shape = SubResource("ObstacleShape")
+
+[node name="Players" type="Node3D" parent="."]
+
+[node name="Spawns" type="Node3D" parent="."]
+
+[node name="Player1" type="Marker3D" parent="Spawns"]
+position = Vector3(-3, 0, 2)
+
+[node name="Player2" type="Marker3D" parent="Spawns"]
+position = Vector3(-1, 0, 2)
+
+[node name="Player3" type="Marker3D" parent="Spawns"]
+position = Vector3(1, 0, 2)
+
+[node name="Player4" type="Marker3D" parent="Spawns"]
+position = Vector3(3, 0, 2)
+
+[node name="PlayerManager" type="Node" parent="." node_paths=PackedStringArray("players_root", "spawn_points")]
+script = ExtResource("2")
+player_scene = ExtResource("1")
+players_root = NodePath("../Players")
+spawn_points = [NodePath("../Spawns/Player1"), NodePath("../Spawns/Player2"), NodePath("../Spawns/Player3"), NodePath("../Spawns/Player4")]
